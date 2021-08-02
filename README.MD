@@ -27,7 +27,7 @@ Usage
    This will produce a new folder `output_myproject` with all artifacts either copied or transformed. 
 
 4. Transformations are mainly based on search/replace of known Strings, and has some known limitations.
-   there may be additional tasks to be performed, see [transformations](TRANSFORMATIONS.MD).
+   there may be additional tasks to be performed, see [transformations](TRANSFORMATIONS.ADOC).
    
    Mainly to:
    
