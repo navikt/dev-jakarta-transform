@@ -1,31 +1,54 @@
-Transforms a Java project to Jakarta EE 9.1 using the [Eclipse Transformer](https://github.com/eclipse/transformer).
 
+Transforms a Java project to Jakarta EE 9.1 using the https://github.com/eclipse/transformer[Eclipse Transformer].
 
-= Supported tranformations
+> Tip:
+> if there are dependencies you can get rid of at little cost (that don't pull their weight and can be swapped for something else), now might be a good time to do so.
 
-[width="80%",cols="3,^2,10,^2",options="header"]
+== Supported tranformations
+
+[cols="3,^2,10,^2",options="header"]
 |=========================================================
-|Transformation | Change | Examples | Details |
-|Package Renames| Renames relevant packages (from javax.\* to jakarta.\*) | ```javax.inject -> jakarta.inject ` javax.enterprise -> jakarta.enterprise<br>javax.ws.rs -> jakarta.ws.rs<br>javax.persistence -> jakarta.persistence<br>javax.transaction -> jakarta.transaction<br>javax.validation -> jakarta.validation<br>javax.annotation -> jakarta.annotation<br>javax.servlet -> jakarta.servlet<br>javax.interceptor -> jakarta.interceptor<br>javax.security.auth -> jakarta.security.auth<br>javax.jws -> jakarta.jws<br>javax.xml.bind -> jakarta.xml.bind ``` | [Package renames](src/main/resources/no/nav/k9/dev/jakarta/jakarta-renames.properties)|
-|JPA Configuration / Query Hints| Renames query hints and JPA configuration properties| <code>javax.persistence.lock.timeout=jakarta.persistence.lock.timeout<br>javax.persistence.query.timeout=jakarta.persistence.query.timeout</code>| [Direct string replacements](src/main/resources/no/nav/k9/dev/jakarta/jakarta-direct.properties)|
- |JPA persistence.xml and *orm.xml files| Updates JPA related XML configuration files with namespace changes| <code>xmlns.jcp.org -> jakarta.ee</code> | [Updates](src/main/resources/no/nav/k9/dev/jakarta/transformer-persistence-xml.properties)|
- |CDI beans.xml files| Updates beans.xml files with namespace changes| <code>xmlns.jcp.org -> jakarta.ee</code> | [Updates](src/main/resources/no/nav/k9/dev/jakarta/transformer-beans-xml.properties)|
- WEB-INF/web.xml | Updates web.xml with namespace changes |<code>xmlns.jcp.org -> jakarta.ee<br>web-app_3_1.xsd -> web-app_5_0.xsd</code>| [Updates](src/main/resources/no/nav/k9/dev/jakarta/transformer-web-xml.properties)|
- |Maven POM |Updates maven pom artifactIds| <code>javax.annotation -> jakarta.annotation</code>| [Updates](src/main/resources/no/nav/k9/dev/jakarta/transformer-pom-xml.properties)|
- |JAXB Bindings (*.xjb) | Updates *.xjb files | <code> java.sun.com/xml/ns/jaxb -> jakarta.ee/xml/ns/jaxb </code>|  [Updates](src/main/resources/no/nav/k9/dev/jakarta/transformer-xjb.properties)|
+|Transformation | Change | Examples | Details 
+|Package Renames| Renames relevant packages (from javax.* to jakarta.*) a| ```javax.inject -> jakarta.inject
+javax.enterprise -> jakarta.enterprise +
+javax.ws.rs -> jakarta.ws.rs
+javax.persistence -> jakarta.persistence
+javax.transaction -> jakarta.transaction
+javax.validation -> jakarta.validation
+javax.annotation -> jakarta.annotation
+javax.servlet -> jakarta.servlet
+javax.interceptor -> jakarta.interceptor
+javax.security.auth -> jakarta.security.auth
+javax.jws -> jakarta.jws
+javax.xml.bind -> jakarta.xml.bind ``` | link:src/main/resources/no/nav/k9/dev/jakarta/jakarta-renames.properties[Package renames]
+|JPA Configuration / Query Hints| Renames query hints and JPA configuration properties a| ```
+javax.persistence.lock.timeout=jakarta.persistence.lock.timeout
+javax.persistence.query.timeout=jakarta.persistence.query.timeout
+```| link:src/main/resources/no/nav/k9/dev/jakarta/jakarta-direct.properties[Direct string replacements]
+ |JPA persistence.xml and *orm.xml files| Updates JPA related XML configuration files with namespace changes a| ```
+ xmlns.jcp.org -> jakarta.ee | link:src/main/resources/no/nav/k9/dev/jakarta/transformer-persistence-xml.properties[Updates]
+ |CDI beans.xml files| Updates beans.xml files with namespace changes a| ```
+ xmlns.jcp.org -> jakarta.ee | link:src/main/resources/no/nav/k9/dev/jakarta/transformer-beans-xml.properties[Updates]
+ |WEB-INF/web.xml | Updates web.xml with namespace changes a|```
+ xmlns.jcp.org -> jakarta.ee<br>web-app_3_1.xsd -> web-app_5_0.xsd | link:src/main/resources/no/nav/k9/dev/jakarta/transformer-web-xml.properties[Updates]
+ |Maven POM | Updates maven pom artifactIds a| ```
+ javax.annotation -> jakarta.annotation | link:src/main/resources/no/nav/k9/dev/jakarta/transformer-pom-xml.properties[Updates]
+ |JAXB Bindings (*.xjb) | Updates *.xjb files a| ```
+ java.sun.com/xml/ns/jaxb -> jakarta.ee/xml/ns/jaxb |  link:src/main/resources/no/nav/k9/dev/jakarta/transformer-xjb.properties[Updates]
 |=========================================================
 
-= Limitations
+== Limitations
 
-| Limitation | Description |
+[options="header"]
 |=========================================================
-| Maven artifact versions | Does not update maven artifact versions. For some of the artifactId updates new versions must be set manually. Using <code>mvn versions:use-dep-version </code> updates may be partially scripted (see Dependency Upgrades section below) |
-| GraphQL Model Generation (graphql-codegen-maven-plugin) | Make sure plugin configuration includes <code> <modelValidationAnnotation>@jakarta.validation.constraints.NotNull</modelValidationAnnotation> </code> |
-| JASPI | JASPI has been changed to Jakarta Authentication.  Jetty (<=11.0.6) usually is configured to use Apache Geronimo as the JASPI implementation (as it's used in the examples), but Jetty (>=11.0.7) has a simpler, and independent implementation. If using Jetty, the setup is changed slightly (no more jaspi-conf.xml). For other web containers, see their documentation. |
-| Maven dependency exclusions | Exclusions no longer needed must be manually removed (if excluding a previous javax.* dependency for example)|
+| Limitation | Description 
+| Maven artifact versions | Does not update maven artifact versions. For some of the artifactId updates new versions must be set manually. Using ```mvn versions:use-dep-version ``` updates may be partially scripted (see Dependency Upgrades section below) 
+| GraphQL Model Generation (graphql-codegen-maven-plugin) | Make sure plugin configuration includes ```<modelValidationAnnotation>@jakarta.validation.constraints.NotNull</modelValidationAnnotation> ``` 
+| JASPI | JASPI has been changed to Jakarta Authentication.  Jetty (<=11.0.6) usually is configured to use Apache Geronimo as the JASPI implementation (as it's used in the examples), but Jetty (>=11.0.7) has a simpler, and independent implementation. If using Jetty, the setup is changed slightly (no more jaspi-conf.xml). For other web containers, see their documentation. 
+| Maven dependency exclusions | Exclusions no longer needed must be manually removed (if excluding a previous javax.* dependency for example)
 |=========================================================
 
-= Maven: Dependency upgrades
+== Maven: Dependency upgrades
 
 Dependencies must be upgraded to minimum (maven coord / version). 
 Coord updates are handled, but not version updates or removal of exclusions
@@ -60,22 +83,24 @@ mvn versions:update-properties -DgenerateBackupPoms=false -Dincludes="no.nav.k9.
 
 ```
 
-= Maven: Dependencies to remove
+== Maven: Dependencies to remove
 
 Following dependencies should be removed (also applies where used in exclusions)
-| Dependency | Alternative |
+
+[options="header"]
 |=========================================================
-| io.swagger:swagger-compat-spec-parser | |
-| javax.json:javax.json-api | Migrate to jakarta alternative or reimplement dependent code using different json parser |
-| org.apache.geronimo.components:geronimo-jaspi | Replace with new jetty-jaspi api |
-| org.apache.geronimo.specs:geronimo-osgi-locator | Replace with new jetty-jaspi api |
-| org.apache.geronimo.specs:geronimo-ws-metadata_2.0_spec| May have been used in exclusions in K9 |
-| javax.xml.stream:stax-api| May have been used in exclusions in K9 |
+| Dependency | Alternative 
+| io.swagger:swagger-compat-spec-parser | 
+| javax.json:javax.json-api | Migrate to jakarta alternative or reimplement dependent code using different json parser 
+| org.apache.geronimo.components:geronimo-jaspi | Replace with new jetty-jaspi api 
+| org.apache.geronimo.specs:geronimo-osgi-locator | Replace with new jetty-jaspi api 
+| org.apache.geronimo.specs:geronimo-ws-metadata_2.0_spec| May have been used in exclusions
+| javax.xml.stream:stax-api| May have been used in exclusions
 |=========================================================
 
-= Maven: Other dependencies to swap / modify
+== Maven: Other dependencies to swap / modify
 
-== Swap Glassfish Jersey Media Json Jackson
+==== Swap Glassfish Jersey Media Json Jackson
 ```
 <!-- before -->
 <dependency>
@@ -95,8 +120,7 @@ Following dependencies should be removed (also applies where used in exclusions)
     </exclusions>
 </dependency>
 ```
-
-== Exclude Jackson Jaxb from Hibernate Types (exclude jackson-module-jaxb-annotations)
+==== Exclude Jackson Jaxb from Hibernate Types (exclude jackson-module-jaxb-annotations)
 ```
 <!-- before -->
 <dependency>
@@ -116,8 +140,7 @@ Following dependencies should be removed (also applies where used in exclusions)
     </exclusions>
 </dependency>
 ```
-
-== Exclude Jackson Jaxb from Swagger (exclude jackson-module-jaxb-annotations)
+==== Exclude Jackson Jaxb from Swagger (exclude jackson-module-jaxb-annotations)
 ```
 <!-- before -->
 <dependency>
@@ -138,7 +161,7 @@ Following dependencies should be removed (also applies where used in exclusions)
 </dependency>
 ```
 
-== Maven POM dependency exclusions referring to javax.* dependencies may *generally* be removed (Note - as it refers to *before* transformation)
+==== Maven POM dependency exclusions referring to javax.* dependencies may *generally* be removed (Note - as it refers to *before* transformation)
 ```
 <!-- example before -->
 <dependency>
@@ -158,16 +181,17 @@ Following dependencies should be removed (also applies where used in exclusions)
     <artifactId>k9-felles-db</artifactId>
 </dependency>
 ```
+==== Check there are no javax.* maven artifacts on classpath after everything is updated.  
+If there are, consider adding exclusions to dependencies that reference them transitively
 
-== Finally, check there are no javax.* maven artifacts on classpath after everything is updated.  If there are, consider adding exclusions to dependencies that reference them transitively
+== K9 Specific Changes
 
-= K9 Specific Changes
-
-== K9 Format specifications
+=== K9 Format specifications
 K9 specifications project references are automatically updated
-[K9Format](src/main/resources/no/nav/k9/dev/jakarta/transformer-pom.xml.properties)
 
-== Remove @Jersey references and Jersey clients (SAF, PDL)
+* link:src/main/resources/no/nav/k9/dev/jakarta/transformer-pom.xml.properties[K9Format]
 
-= Acknowledgments
-* Configuration files for rename / string replacements have come from [Open Liberty](https://github.com/OpenLiberty/open-liberty/tree/integration/dev/wlp-jakartaee-transform/rules)
+=== Remove @Jersey references and Jersey clients (SAF, PDL)
+
+== Acknowledgments
+* Configuration files for rename / string replacements have come from https://github.com/OpenLiberty/open-liberty/tree/integration/dev/wlp-jakartaee-transform/rules[Open Liberty]
