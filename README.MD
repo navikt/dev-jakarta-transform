@@ -2,8 +2,10 @@ K9 Jakarta Transformer
 ========================
 
 This is a tool to perform a one-off transformation of source code for a Javava maven/gradle project from Java EE to Jakarta EE.
+
 It will do 80-90% of the grunt work of replacing package namespaces in source and configuration (xml files).
 What remains is primarily correcting the dependencies - implementation versions of the [Jakarta EE](https://jakarta.ee/specifications/) - and dependent libraries.
+
 See  [TRANSFORMATIONS.ADOC](TRANSFORMATIONS.ADOC) for details and known limitations.
 
 
