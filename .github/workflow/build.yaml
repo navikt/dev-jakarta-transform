@@ -4,7 +4,7 @@ name: Bygg og deploy
 on:
   push:
     branches:
-      - master         # Push events on master branch
+      - main         # Push events on main branch
     paths-ignore:
       - '**.md'
       - '**.MD'
