@@ -10,7 +10,7 @@ Transforms a Java project to Jakarta EE 9.1 using the https://github.com/eclipse
 |=========================================================
 |Transformation | Change | Examples | Details 
 |Package Renames| Renames relevant packages (from javax.* to jakarta.*) a| ```javax.inject -> jakarta.inject
-javax.enterprise -> jakarta.enterprise +
+javax.enterprise -> jakarta.enterprise
 javax.ws.rs -> jakarta.ws.rs
 javax.persistence -> jakarta.persistence
 javax.transaction -> jakarta.transaction
