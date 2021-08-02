@@ -1,13 +1,17 @@
 K9 Jakarta Transformer
 ========================
 
+This is a tool to perform a one-off transformation of source code for a Javava maven/gradle project from Java EE to Jakarta EE.
+It will do 80-90% of the grunt work of replacing package namespaces in source and configuration (xml files).
+What remains is primarily correcting the dependencies - implementation versions of the [Jakarta EE](https://jakarta.ee/specifications/) - and dependent libraries.
+
+
 Usage
 =====
 
-```
 1. Clone the repo
    ```sh
-   git clone https://github.com/navikt/jakarta-transform.git
+   git clone https://github.com/navikt/dev-jakarta-transform.git
    ```
 2. Build
    ```sh
@@ -24,12 +28,13 @@ Usage
 
 4. Transformations are mainly based on search/replace of known Strings, and has some known limitations.
    there may be additional tasks to be performed, see [transformations](TRANSFORMATIONS.MD).
+   
    Mainly to:
    
-* Update Maven POM versions and Maven dependencies (update, remove, add)
-* Remove possible exclusions added for old JavaEE artifacts (these did not have any official release artifacts, so were generally built and deployed by different organizations under different maven coordinates - glassfish, sun, jboss, etc.)
-* Update use of libraries which have incompatible changes (jetty-jaspi)
-* Update use of plugin configurations for code-generation (e.g. graphql, jaxb)
+   * Update Maven POM versions and Maven dependencies (update, remove, add)
+   * Remove possible exclusions added for old JavaEE artifacts (these did not have any official release artifacts, so were generally built and deployed by different organizations under different maven coordinates - glassfish, sun, jboss, etc.)
+   * Update use of libraries which have incompatible changes (jetty-jaspi, jersey)
+   * Update use of plugin configurations for code-generation (e.g. graphql, jaxb)
 
 Limitations
 ===========
