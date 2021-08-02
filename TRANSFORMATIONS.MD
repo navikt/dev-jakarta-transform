@@ -1,0 +1,171 @@
+Transforms a Java project to Jakarta EE 9.1 using the [Eclipse Transformer](https://github.com/eclipse/transformer).
+
+
+Supported tranformations
+========================
+
+| Transformation | Change | Examples | Details |
+|Package Renames| Renames relevant packages (from javax.* to jakarta.*) | <code>javax.inject -> jakarta.inject<br>javax.enterprise -> jakarta.enterprise<br>javax.ws.rs -> jakarta.ws.rs<br>javax.persistence -> jakarta.persistence<br>javax.transaction -> jakarta.transaction<br>javax.validation -> jakarta.validation<br>javax.annotation -> jakarta.annotation<br>javax.servlet -> jakarta.servlet<br>javax.interceptor -> jakarta.interceptor<br>javax.security.auth -> jakarta.security.auth<br>javax.jws -> jakarta.jws<br>javax.xml.bind -> jakarta.xml.bind </code>| [Package renames](src/main/resources/no/nav/k9/dev/jakarta/jakarta-renames.properties)|
+|JPA Configuration / Query Hints| Renames query hints and JPA configuration properties| <code>javax.persistence.lock.timeout=jakarta.persistence.lock.timeout<br>javax.persistence.query.timeout=jakarta.persistence.query.timeout</code>| [Direct string replacements](src/main/resources/no/nav/k9/dev/jakarta/jakarta-direct.properties)|
+| JPA persistence.xml and *orm.xml files| Updates JPA related XML configuration files with namespace changes| <code>xmlns.jcp.org -> jakarta.ee</code> | [Updates](src/main/resources/no/nav/k9/dev/jakarta/transformer-persistence-xml.properties)|
+| CDI beans.xml files| Updates beans.xml files with namespace changes| <code>xmlns.jcp.org -> jakarta.ee</code> | [Updates](src/main/resources/no/nav/k9/dev/jakarta/transformer-beans-xml.properties)|
+| WEB-INF/web.xml | Updates web.xml with namespace changes |<code>xmlns.jcp.org -> jakarta.ee<br>web-app_3_1.xsd -> web-app_5_0.xsd</code>| [Updates](src/main/resources/no/nav/k9/dev/jakarta/transformer-web-xml.properties)|
+| Maven POM |Updates maven pom artifactIds| <code>javax.annotation -> jakarta.annotation</code>| [Updates](src/main/resources/no/nav/k9/dev/jakarta/transformer-pom-xml.properties)|
+| JAXB Bindings (*.xjb) | Updates *.xjb files | <code> java.sun.com/xml/ns/jaxb -> jakarta.ee/xml/ns/jaxb </code>|  [Updates](src/main/resources/no/nav/k9/dev/jakarta/transformer-xjb.properties)|
+
+
+Limitations
+===========
+| Limitation | Description |
+| Maven artifact versions | Does not update maven artifact versions. For some of the artifactId updates new versions must be set manually. Using <code>mvn versions:use-dep-version </code> updates may be partially scripted (see Dependency Upgrades section below) |
+| GraphQL Model Generation (graphql-codegen-maven-plugin) | Make sure plugin configuration includes <code> <modelValidationAnnotation>@jakarta.validation.constraints.NotNull</modelValidationAnnotation> </code> |
+| JASPI | JASPI has been changed to Jakarta Authentication.  Jetty (<=11.0.6) usually is configured to use Apache Geronimo as the JASPI implementation (as it's used in the examples), but Jetty (>=11.0.7) has a simpler, and independent implementation. If using Jetty, the setup is changed slightly (no more jaspi-conf.xml). For other web containers, see their documentation. |
+| Maven dependency exclusions | Exclusions no longer needed must be manually removed (if excluding a previous javax.* dependency for example)|
+
+Maven: Dependency upgrades
+================
+Dependencies must be upgraded to minimum (maven coord / version). 
+Coord updates are handled, but not version updates or removal of exclusions
+
+Minimal conversion script (assumes run against new maven coords, after other transformation done by this project):
+```sh
+mvn versions:use-dep-version -DdepVersion=5.5.4.Final -Dincludes=org.hibernate:hibernate-core-jakarta -DforceVersion=true -DgenerateBackupPoms=false
+mvn versions:use-dep-version -DdepVersion=3.0.2 -Dincludes=org.glassfish.jersey:jersey-bom -DforceVersion=true -DgenerateBackupPoms=false
+mvn versions:use-dep-version -DdepVersion=3.0.1 -Dincludes=jakarta.xml.bind:jakarta.xml.bind-api -DforceVersion=true -DgenerateBackupPoms=false
+mvn versions:use-dep-version -DdepVersion=3.0.1 -Dincludes=org.glassfish.jaxb:jaxb-bom -DforceVersion=true -DgenerateBackupPoms=false
+mvn versions:use-dep-version -DdepVersion=3.0.1 -Dincludes=org.glassfish:jaxb-runtime -DforceVersion=true -DgenerateBackupPoms=false
+mvn versions:use-dep-version -DdepVersion=3.0.1 -Dincludes=org.glassfish:jakarta.el -DforceVersion=true -DgenerateBackupPoms=false
+
+# Following may not work correctly (bug in versions:use-dep-version regarding import scope dependencies in plugin version 2.8.1)
+mvn versions:use-dep-version -DdepVersion=4.0.1.SP1 -Dincludes=org.jboss.weld:weld-core-bom -DforceVersion=true -DgenerateBackupPoms=false
+mvn versions:use-dep-version -DdepVersion=11.0.7 -Dincludes=org.eclipse.jetty:jetty-bom -DforceVersion=true -DgenerateBackupPoms=false
+mvn versions:use-dep-version -DdepVersion=2.12.4 -Dincludes=com.fasterxml.jackson:jackson-bom -DforceVersion=true -DgenerateBackupPoms=false
+
+mvn versions:use-dep-version -DdepVersion=0.5.0 -Dincludes=no.nav.k9.prosesstask:prosesstask-root -DforceVersion=true -DgenerateBackupPoms=false
+
+# Following may need to be manually added as was transitive before
+mvn versions:use-dep-version -DdepVersion=7.0.1.Final -Dincludes=org.hibernate.validator:hibernate-validator -DforceVersion=true -DgenerateBackupPoms=false
+
+```
+
+Alternative conversion script (will take latest version for given dependencies, may yield incorrect results - e.g. beta versions instead of latest stable release). Will also handle versions referenced through properties
+```sh
+mvn versions:use-latest-releases -DgenerateBackupPoms=false -Dincludes="org.hibernate*,org.glassfish:*,org.glassfish.jaxb:*,org.glassfish.jersey:*,jakarta.xml.bind:*,org.jboss.weld:*,org.eclipse.jetty:*,com.fasterxml.jackson:*,no.nav.k9.felles:*,no.nav.k9:*,no.nav.k9.prosesstask:*,no.nav.k9.felles.integrasjon:*,no.nav.k9.felles.sikkerhet:*,no.nav.k9.felles.oidc-token:*"
+
+# Following will attempt to update all properties referencing a version for the given artifact groupIds
+mvn versions:update-properties -DgenerateBackupPoms=false -Dincludes="no.nav.k9.felles:*,no.nav.k9:*,no.nav.k9.prosesstask:*,no.nav.k9.felles.integrasjon:*,no.nav.k9.felles.sikkerhet:*,no.nav.k9.felles.oidc-token:*"
+
+```
+
+Maven: Dependencies to remove
+======================
+Following dependencies should be removed (also applies where used in exclusions)
+| Dependency | Alternative |
+| io.swagger:swagger-compat-spec-parser | |
+| javax.json:javax.json-api | Migrate to jakarta alternative or reimplement dependent code using different json parser |
+| org.apache.geronimo.components:geronimo-jaspi | Replace with new jetty-jaspi api |
+| org.apache.geronimo.specs:geronimo-osgi-locator | Replace with new jetty-jaspi api |
+| org.apache.geronimo.specs:geronimo-ws-metadata_2.0_spec| May have been used in exclusions in K9 |
+| javax.xml.stream:stax-api| May have been used in exclusions in K9 |
+
+
+Maven: Other dependencies to swap / modify
+==============================
+
+## Swap Glassfish Jersey Media Json Jackson
+```
+<!-- before -->
+<dependency>
+    <groupId>org.glassfish.jersey.media</groupId>
+    <artifactId>jersey-media-json-jackson</artifactId>
+</dependency>
+ 
+<!-- after : jackson 2.12.4 jackson-module-jaxb-annotations has transitive dependency on old javax.xml.bind api -->
+<dependency>
+    <groupId>com.fasterxml.jackson.jaxrs</groupId>
+    <artifactId>jackson-jaxrs-json-provider</artifactId>
+    <exclusions>
+        <exclusion>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jaxb-annotations</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+```
+
+## Exclude Jackson Jaxb from Hibernate Types (exclude jackson-module-jaxb-annotations)
+```
+<!-- before -->
+<dependency>
+    <groupId>com.vladmihalcea</groupId>
+    <artifactId>hibernate-types-52</artifactId>
+</dependency>
+ 
+<!-- after : jackson 2.12.4 jackson-module-jaxb-annotations has transitive dependency on old javax.xml.bind api  -->
+<dependency>
+    <groupId>com.vladmihalcea</groupId>
+    <artifactId>hibernate-types-52</artifactId>
+    <exclusions>
+        <exclusion>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jaxb-annotations</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+```
+
+## Exclude Jackson Jaxb from Swagger (exclude jackson-module-jaxb-annotations)
+```
+<!-- before -->
+<dependency>
+	<groupId>io.swagger.core.v3</groupId>
+	<artifactId>swagger-jaxrs2</artifactId>
+</dependency>
+ 
+<!-- after : jackson 2.12.4 jackson-module-jaxb-annotations has transitive dependency on old javax.xml.bind api  -->
+<dependency>
+    <groupId>io.swagger.core.v3</groupId>
+    <artifactId>swagger-jaxrs2-jakarta</artifactId>
+    <exclusions>
+        <exclusion>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jaxb-annotations</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+```
+
+## Maven POM dependency exclusions referring to javax.* dependencies may *generally* be removed (Note - as it refers to *before* transformation)
+```
+<!-- example before -->
+<dependency>
+    <groupId>no.nav.k9.felles</groupId>
+    <artifactId>k9-felles-db</artifactId>
+    <exclusions>
+        <exclusion>
+            <groupId>javax.xml.stream</groupId>
+            <artifactId>stax-api</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+ 
+<!-- example after -->
+<dependency>
+    <groupId>no.nav.k9.felles</groupId>
+    <artifactId>k9-felles-db</artifactId>
+</dependency>
+```
+
+## Finally, check there are no javax.* maven artifacts on classpath after everything is updated.  If there are, consider adding exclusions to dependencies that reference them transitively
+
+K9 Specific Changes
+===================
+## K9 Format specifications
+K9 specifications project references are automatically updated
+[K9Format](src/main/resources/no/nav/k9/dev/jakarta/transformer-pom.xml.properties)
+
+## Remove @Jersey references and Jersey clients (SAF, PDL)
+
+Acknowledgments
+========================
+* Configuration files for rename / string replacements have come from [Open Liberty](https://github.com/OpenLiberty/open-liberty/tree/integration/dev/wlp-jakartaee-transform/rules)
