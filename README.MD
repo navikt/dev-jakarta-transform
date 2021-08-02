@@ -42,3 +42,4 @@ Usage
 Limitations
 ===========
 * ATM Kafka Avro Schema Registry Client doesn't support Jakarta EE. Waiting on [this PR](https://github.com/confluentinc/schema-registry/pull/1933)
+
