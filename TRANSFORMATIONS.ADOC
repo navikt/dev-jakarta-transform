@@ -193,5 +193,4 @@ K9 specifications project references are automatically updated
 
 === Remove @Jersey references and Jersey clients (SAF, PDL)
 
-== Acknowledgments
-* Configuration files for rename / string replacements have come from https://github.com/OpenLiberty/open-liberty/tree/integration/dev/wlp-jakartaee-transform/rules[Open Liberty]
+
