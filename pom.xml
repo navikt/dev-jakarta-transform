@@ -102,6 +102,14 @@
 		</repository>
 	</repositories>
 
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>Github Navikt Maven Packages</name>
+			<url>https://maven.pkg.github.com/navikt/dev-jakarta-transform</url>
+		</repository>
+	</distributionManagement>
+
 	<scm>
 		<connection>scm:git:https://github.com/navikt/dev-jakarta-transform.git</connection>
 		<developerConnection>scm:git:https://github.com/navikt/dev-jakarta-transform.git</developerConnection>
