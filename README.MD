@@ -1,7 +1,7 @@
 K9 Jakarta Transformer
 ========================
 
-This is a tool to perform a one-off transformation of source code for a Javava maven/gradle project from Java EE to Jakarta EE.
+This is a tool to perform a one-off transformation of source code for a Javava maven/gradle project from Java EE to Jakarta EE, built on the [Eclipse Transformer](https://github.com/eclipse/transformer)
 
 It will do 80-90% of the grunt work of replacing package namespaces in source and configuration (xml files).
 What remains is primarily correcting the dependencies - implementation versions of the [Jakarta EE](https://jakarta.ee/specifications/) - and dependent libraries.
@@ -42,4 +42,9 @@ Usage
 Limitations
 ===========
 * ATM Kafka Avro Schema Registry Client doesn't support Jakarta EE. Waiting on [this PR](https://github.com/confluentinc/schema-registry/pull/1933)
+
+Acknowledgments
+===============
+* The driver for handling the namespace replacements is the [Eclipse Transformer](https://github.com/eclipse/transformer)
+* Configuration files for rename / string replacements have come from [Open Liberty](https://github.com/OpenLiberty/open-liberty/tree/integration/dev/wlp-jakartaee-transform/rules)
 
