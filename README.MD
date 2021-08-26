@@ -39,10 +39,6 @@ Usage
    * Update use of libraries which have incompatible changes (jetty-jaspi, jersey)
    * Update use of plugin configurations for code-generation (e.g. graphql, jaxb)
 
-Limitations
-===========
-* ATM Kafka Avro Schema Registry Client doesn't support Jakarta EE. Waiting on [this PR](https://github.com/confluentinc/schema-registry/pull/1933)
-
 Acknowledgments
 ===============
 * The driver for handling the namespace replacements is the [Eclipse Transformer](https://github.com/eclipse/transformer)
