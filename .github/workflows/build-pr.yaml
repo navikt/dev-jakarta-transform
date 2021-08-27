@@ -19,14 +19,11 @@ jobs:
         with:
           ref: ${{github.event.pull_request.head.ref}}
           repository: ${{github.event.pull_request.head.repo.full_name}}
-      - uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
       - uses: actions/setup-java@v2
         with:
           java-version: '11'
           distribution: 'adopt'
+          cache: 'maven'
       - name: Build
         shell: bash
         run: |
