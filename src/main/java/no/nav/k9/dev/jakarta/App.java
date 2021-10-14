@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.transformer.Transformer;
-import org.eclipse.transformer.Transformer.AppOption;
+import org.eclipse.transformer.AppOption;
 
 /**
  * Transform a given code base to jakarta with provided default transformation rules
- * 
+ *
  * (adapted from JakartaTransformer in eclipse-transformer.cli project)
  */
 public class App {
@@ -27,8 +27,8 @@ public class App {
     public static final String DEFAULT_MASTER_TEXT_REFERENCE = "jakarta-text-master.properties";
     public static final String DEFAULT_PER_CLASS_CONSTANT_MASTER_REFERENCE = "jakarta-per-class-constant-master.properties";
 
-    public static Map<Transformer.AppOption, String> getOptionDefaults() {
-        Map<Transformer.AppOption, String> optionDefaults = new HashMap<>();
+    public static Map<AppOption, String> getOptionDefaults() {
+        Map<AppOption, String> optionDefaults = new HashMap<>();
 
         optionDefaults.put(AppOption.RULES_RENAMES, DEFAULT_RENAMES_REFERENCE);
         optionDefaults.put(AppOption.RULES_VERSIONS, DEFAULT_VERSIONS_REFERENCE);
