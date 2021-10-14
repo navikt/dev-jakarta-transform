@@ -12,6 +12,7 @@ import org.eclipse.transformer.AppOption;
  * (adapted from JakartaTransformer in eclipse-transformer.cli project)
  */
 public class App {
+    
     public static void main(String[] args) throws Exception {
         var transformer = new Transformer(System.out, System.err);
         transformer.setOptionDefaults(App.class, getOptionDefaults());
