@@ -3,8 +3,10 @@ package no.nav.k9.dev.jakarta;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.transformer.Transformer;
 import org.eclipse.transformer.AppOption;
+import org.eclipse.transformer.Transformer;
+import org.eclipse.transformer.cli.JakartaTransformerCLI;
+import org.slf4j.LoggerFactory;
 
 /**
  * Transform a given code base to jakarta with provided default transformation rules
@@ -12,13 +14,13 @@ import org.eclipse.transformer.AppOption;
  * (adapted from JakartaTransformer in eclipse-transformer.cli project)
  */
 public class App {
-    
+
     public static void main(String[] args) throws Exception {
-        var transformer = new Transformer(System.out, System.err);
-        transformer.setOptionDefaults(App.class, getOptionDefaults());
-        transformer.setArgs(args);
-        int rc = transformer.run();
-        System.exit(rc);
+        var transformer = new Transformer(LoggerFactory.getLogger(App.class),
+                new JakartaTransformerCLI(System.out, System.err, args));
+
+        var rc = transformer.run();
+        System.exit(rc.equals(Transformer.ResultCode.SUCCESS_RC) ? 0 : 1);
     }
 
     public static final String DEFAULT_RENAMES_REFERENCE = "jakarta-renames.properties";
