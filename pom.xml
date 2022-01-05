@@ -17,7 +17,7 @@
 			<groupId>org.eclipse.transformer</groupId>
 			<artifactId>org.eclipse.transformer.cli</artifactId>
 			<!-- uses snapshot version due to bugs with multi-module projects in 0.2.0 -->
-			<version>0.3.0-20211026.182401-26</version>
+			<version>0.3.0-20211026.182401-27</version>
 		</dependency>
 	</dependencies>
 
