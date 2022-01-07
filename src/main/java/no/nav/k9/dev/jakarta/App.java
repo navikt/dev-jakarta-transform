@@ -31,8 +31,9 @@ public class App {
     public static Set<String> LOCALS = Set.of("jakarta-renames.properties", "jakarta-direct.properties", "jakarta-text-master.properties");
 
     public static Function<String, URL> getLoader(){
+
         return (key) -> {
-             if(LOCALS.contains(key)){
+             if(LOCALS.contains(key) || key.startsWith("transformer-")){
                  return App.class.getResource(key);
              } else {
                  return JakartaTransform.getRuleLoader().apply(key);
