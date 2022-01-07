@@ -25,7 +25,7 @@ Usage
    NB! if this project depends on a another project that doesn't support Jakarta EE 9.x - convert that one first.  
    If it's a shared project, consider dual publishing artifacts under a new coordinate (e.g. myproject-jakarta) to allow gradual transition.
    ```sh
-   jar -jar $JAR_PATH/jakarta-transformer-1.0-SNAPSHOT.jar ./
+   java -jar $JAR_PATH/dev-jakarta-transform-0.6.0-SNAPSHOT.jar ./
    ```
    This will produce a new folder `output_myproject` with all artifacts either copied or transformed. 
 
