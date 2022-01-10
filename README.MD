@@ -28,6 +28,8 @@ Usage
    java -jar $JAR_PATH/dev-jakarta-transform-0.6.0-SNAPSHOT.jar <project-folder> <output-folder>
    ```
    This will produce a new folder `output_myproject` with all artifacts either copied or transformed. 
+   
+   By passing the "--reverse" flag, all transformations will be done in reverse - e.g. "jakarta"->"javax" or similar. Note that there may be ambiguity if there are multiple overlapping keys, or multiple keys in the original transformation that maps to the same value.  So the transformation a->b plus b->a may not give exact same result a.
 
 4. Transformations are mainly based on search/replace of known Strings, and has some known limitations.
    there may be additional tasks to be performed, see [transformations](TRANSFORMATIONS.ADOC).
