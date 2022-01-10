@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +27,10 @@ public class App {
 
     private static final class ReverseLoader implements Function<String, URL> {
         private final Map<String, URL> cache = new LinkedHashMap<>();
-        private final Function<String, URL> baseLoader ;
+        private final Function<String, URL> baseLoader;
 
         public ReverseLoader(Function<String, URL> baseLoader) {
-            this.baseLoader=baseLoader;
+            this.baseLoader = baseLoader;
         }
 
         @Override
@@ -50,12 +51,12 @@ public class App {
                     copyFrom.stringPropertyNames().stream().forEach(k -> {
                         copyTo.put(copyFrom.getProperty(k), k);
                     });
-                    
+
                     var f = File.createTempFile("reverse-" + key, ".properties");
                     try (var out = new FileOutputStream(f)) {
                         copyTo.store(out, "Reversed key-value");
                     }
-                    
+
                     var newUrl = f.toURI().toURL();
                     cache.put(key, newUrl);
                     return newUrl;
@@ -76,12 +77,23 @@ public class App {
         List<String> strArgs = args == null || args.length == 0 ? List.of() : Arrays.asList(args);
         final boolean reverse = strArgs.stream().filter(a -> reverseFlag.equals(a)).findAny().isPresent();
         List<String> strArgsClean = strArgs.stream().filter(a -> !reverseFlag.equals(a)).collect(Collectors.toList());
-        
+
         var cli = new JakartaTransformerCLI(System.out, System.err, strArgsClean.toArray(new String[0]));
-        cli.setOptionDefaults(getLoader(reverse), JakartaTransform.getOptionDefaults());
+        cli.setOptionDefaults(getLoader(reverse), getOptionsDefault(reverse));
 
         var rc = JakartaTransformerCLI.runWith(cli);
         System.exit(rc.equals(Transformer.ResultCode.SUCCESS_RC) ? 0 : 1);
+    }
+
+    private static Map<String, String> getOptionsDefault(boolean reverse) {
+        Map<String, String> optionDefaults = new LinkedHashMap<>(JakartaTransform.getOptionDefaults());
+        if (reverse) {
+            // non-compatible with reverse lookup
+            optionDefaults.remove("bundles");
+            optionDefaults.remove("versions");
+            optionDefaults.remove("per-class-constant");
+        }
+        return Collections.unmodifiableMap(optionDefaults);
     }
 
     public static Function<String, URL> getLoader(boolean reverse) {
