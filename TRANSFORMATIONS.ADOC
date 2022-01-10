@@ -120,8 +120,26 @@ Following dependencies should be removed (also applies where used in exclusions)
     </exclusions>
 </dependency>
 ```
+
+==== Remove Hibernate Types (preferable) ====
+```
+
+<!-- before -->
+<dependency>
+    <groupId>com.vladmihalcea</groupId>
+    <artifactId>hibernate-types-52</artifactId>
+</dependency>
+
+<!-- after -->
+1. drop dependency
+2. Rewrite use of types 
+	a. JsonBinaryType (jsonb) may be rewritten to @ColumnTransformer(write="?::jsonb") on String columns
+	b. Range type TBD
+```
+
 ==== Exclude Jackson Jaxb from Hibernate Types (exclude jackson-module-jaxb-annotations)
 ```
+<!-- Hibernate Types do not support Jakarta EE9 atm: https://github.com/vladmihalcea/hibernate-types/issues/380 -->
 <!-- before -->
 <dependency>
     <groupId>com.vladmihalcea</groupId>
