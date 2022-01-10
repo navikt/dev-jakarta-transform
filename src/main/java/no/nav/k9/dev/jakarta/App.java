@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.eclipse.transformer.Transformer;
 import org.eclipse.transformer.cli.JakartaTransformerCLI;
@@ -70,9 +72,12 @@ public class App {
 
     public static void main(String[] args) throws Exception {
 
-        boolean reverse = args == null || args.length == 0 ? false : Arrays.asList(args).stream().filter(a -> "--reverse".equals(a)).findAny().isPresent();
-
-        var cli = new JakartaTransformerCLI(System.out, System.err, args);
+        final String reverseFlag = "--reverse";
+        List<String> strArgs = args == null || args.length == 0 ? List.of() : Arrays.asList(args);
+        final boolean reverse = strArgs.stream().filter(a -> reverseFlag.equals(a)).findAny().isPresent();
+        List<String> strArgsClean = strArgs.stream().filter(a -> !reverseFlag.equals(a)).collect(Collectors.toList());
+        
+        var cli = new JakartaTransformerCLI(System.out, System.err, strArgsClean.toArray(new String[0]));
         cli.setOptionDefaults(getLoader(reverse), JakartaTransform.getOptionDefaults());
 
         var rc = JakartaTransformerCLI.runWith(cli);
