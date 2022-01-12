@@ -100,26 +100,6 @@ Following dependencies should be removed (also applies where used in exclusions)
 
 == Maven: Other dependencies to swap / modify
 
-==== Swap Glassfish Jersey Media Json Jackson
-```
-<!-- before -->
-<dependency>
-    <groupId>org.glassfish.jersey.media</groupId>
-    <artifactId>jersey-media-json-jackson</artifactId>
-</dependency>
- 
-<!-- after : jackson 2.12.4 jackson-module-jaxb-annotations has transitive dependency on old javax.xml.bind api -->
-<dependency>
-    <groupId>com.fasterxml.jackson.jaxrs</groupId>
-    <artifactId>jackson-jaxrs-json-provider</artifactId>
-    <exclusions>
-        <exclusion>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-jaxb-annotations</artifactId>
-        </exclusion>
-    </exclusions>
-</dependency>
-```
 
 ==== Remove Hibernate Types (preferable) ====
 ```
