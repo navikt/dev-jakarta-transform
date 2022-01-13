@@ -8,7 +8,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<eclipse.transformer.version>0.3.0-20220107.043231-2</eclipse.transformer.version>
+		<eclipse.transformer.version>0.3.0-20220113.030045-8</eclipse.transformer.version>
 	</properties>
 
 	<dependencies>
