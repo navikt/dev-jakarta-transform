@@ -55,22 +55,22 @@ Coord updates are handled, but not version updates or removal of exclusions
 
 Minimal conversion script (assumes run against new maven coords, after other transformation done by this project):
 ```sh
-mvn versions:use-dep-version -DdepVersion=5.5.4.Final -Dincludes=org.hibernate:hibernate-core-jakarta -DforceVersion=true -DgenerateBackupPoms=false
-mvn versions:use-dep-version -DdepVersion=3.0.2 -Dincludes=org.glassfish.jersey:jersey-bom -DforceVersion=true -DgenerateBackupPoms=false
+mvn versions:use-dep-version -DdepVersion=5.6.3.Final -Dincludes=org.hibernate:hibernate-core-jakarta -DforceVersion=true -DgenerateBackupPoms=false
+mvn versions:use-dep-version -DdepVersion=3.0.3 -Dincludes=org.glassfish.jersey:jersey-bom -DforceVersion=true -DgenerateBackupPoms=false
 mvn versions:use-dep-version -DdepVersion=3.0.1 -Dincludes=jakarta.xml.bind:jakarta.xml.bind-api -DforceVersion=true -DgenerateBackupPoms=false
-mvn versions:use-dep-version -DdepVersion=3.0.1 -Dincludes=org.glassfish.jaxb:jaxb-bom -DforceVersion=true -DgenerateBackupPoms=false
-mvn versions:use-dep-version -DdepVersion=3.0.1 -Dincludes=org.glassfish:jaxb-runtime -DforceVersion=true -DgenerateBackupPoms=false
-mvn versions:use-dep-version -DdepVersion=3.0.1 -Dincludes=org.glassfish:jakarta.el -DforceVersion=true -DgenerateBackupPoms=false
+mvn versions:use-dep-version -DdepVersion=3.0.2 -Dincludes=org.glassfish.jaxb:jaxb-bom -DforceVersion=true -DgenerateBackupPoms=false
+mvn versions:use-dep-version -DdepVersion=3.0.2 -Dincludes=org.glassfish:jaxb-runtime -DforceVersion=true -DgenerateBackupPoms=false
+mvn versions:use-dep-version -DdepVersion=4.0.2 -Dincludes=org.glassfish:jakarta.el -DforceVersion=true -DgenerateBackupPoms=false
 
 # Following may not work correctly (bug in versions:use-dep-version regarding import scope dependencies in plugin version 2.8.1)
-mvn versions:use-dep-version -DdepVersion=4.0.1.SP1 -Dincludes=org.jboss.weld:weld-core-bom -DforceVersion=true -DgenerateBackupPoms=false
+mvn versions:use-dep-version -DdepVersion=4.0.2.SP1 -Dincludes=org.jboss.weld:weld-core-bom -DforceVersion=true -DgenerateBackupPoms=false
 mvn versions:use-dep-version -DdepVersion=11.0.7 -Dincludes=org.eclipse.jetty:jetty-bom -DforceVersion=true -DgenerateBackupPoms=false
-mvn versions:use-dep-version -DdepVersion=2.12.4 -Dincludes=com.fasterxml.jackson:jackson-bom -DforceVersion=true -DgenerateBackupPoms=false
+mvn versions:use-dep-version -DdepVersion=2.13.1 -Dincludes=com.fasterxml.jackson:jackson-bom -DforceVersion=true -DgenerateBackupPoms=false
 
 mvn versions:use-dep-version -DdepVersion=0.5.0 -Dincludes=no.nav.k9.prosesstask:prosesstask-root -DforceVersion=true -DgenerateBackupPoms=false
 
 # Following may need to be manually added as was transitive before
-mvn versions:use-dep-version -DdepVersion=7.0.1.Final -Dincludes=org.hibernate.validator:hibernate-validator -DforceVersion=true -DgenerateBackupPoms=false
+mvn versions:use-dep-version -DdepVersion=7.0.2.Final -Dincludes=org.hibernate.validator:hibernate-validator -DforceVersion=true -DgenerateBackupPoms=false
 
 ```
 
@@ -91,11 +91,11 @@ Following dependencies should be removed (also applies where used in exclusions)
 |=========================================================
 | Dependency | Alternative 
 | io.swagger:swagger-compat-spec-parser | 
-| javax.json:javax.json-api | Migrate to jakarta alternative or reimplement dependent code using different json parser 
-| org.apache.geronimo.components:geronimo-jaspi | Replace with new jetty-jaspi api 
-| org.apache.geronimo.specs:geronimo-osgi-locator | Replace with new jetty-jaspi api 
-| org.apache.geronimo.specs:geronimo-ws-metadata_2.0_spec| May have been used in exclusions
-| javax.xml.stream:stax-api| May have been used in exclusions
+| javax.json:javax.json-api | Migrate to jakarta alternative or reimplement dependent code using different json parser |
+| org.apache.geronimo.components:geronimo-jaspi | Replace with new jetty-jaspi api |
+| org.apache.geronimo.specs:geronimo-osgi-locator | Replace with new jetty-jaspi api |
+| org.apache.geronimo.specs:geronimo-ws-metadata_2.0_spec| May have been used in exclusions |
+| javax.xml.stream:stax-api| May have been used in exclusions |
 |=========================================================
 
 == Maven: Other dependencies to swap / modify
