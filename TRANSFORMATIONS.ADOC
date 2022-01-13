@@ -83,6 +83,10 @@ mvn versions:update-properties -DgenerateBackupPoms=false -Dincludes="no.nav.k9.
 
 ```
 
+== Maven: Dependency Management (Imported Dependencies)
+the Maven Versions plugin does not support updating imported dependencies (those marked `<scope>import</scope>`).  These must be manuall update to appropriate versions
+(PR for plugin: https://github.com/mojohaus/versions-maven-plugin/pull/476)
+
 == Maven: Dependencies to remove
 
 Following dependencies should be removed (also applies where used in exclusions)
